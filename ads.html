@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monetag Ad Viewer</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        .ad-container {
+            width: 100%;
+            max-width: 600px;
+            height: 500px;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .progress, #timer {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Monetag Ad Viewer</h1>
+    
+    <!-- Ad Container with iframe for direct ad display -->
+    <div class="ad-container">
+        <iframe id="adFrame" src=""></iframe>
+    </div>
+    
+    <!-- Controls for next button and timer -->
+    <div class="controls">
+        <div class="progress" id="progress">Ad 1 of 3</div>
+        <div id="timer">Next available in: <span id="timeLeft">5</span> seconds</div>
+        <button id="nextButton" disabled>Next</button>
+    </div>
+
+    <script>
+        // List of Monetag direct ad links
+        const adLinks = [
+            "https://zireemilsoude.net/4/8554191",
+            "https://zireemilsoude.net/4/8554186",
+            "https://zireemilsoude.net/4/8554190",
+            "https://zireemilsoude.net/4/8561073",
+            "https://zireemilsoude.net/4/8554188",
+            "https://zireemilsoude.net/4/8554195",
+            "https://zireemilsoude.net/4/8554189",
+            "https://zireemilsoude.net/4/8554183",
+            "https://zireemilsoude.net/4/8561072",
+            "https://zireemilsoude.net/4/8554194",
+            "https://zireemilsoude.net/4/8598440",
+            "https://zireemilsoude.net/4/8598441",
+            "https://zireemilsoude.net/4/8598439",
+            
+            // Add more ad links as needed
+        ];
+
+        let currentAdIndex = 0; // Track the current ad index
+        const adFrame = document.getElementById('adFrame');
+        const nextButton = document.getElementById('nextButton');
+        const timeLeft = document.getElementById('timeLeft');
+        const progress = document.getElementById('progress');
+        let countdown;
+
+        // Function to load an ad directly in the iframe
+        function loadAd() {
+            // Set the src of iframe to display the ad
+            adFrame.src = adLinks[currentAdIndex];
+
+            // Start countdown and disable Next button
+            startCountdown(5); // Set timer in seconds
+            updateProgress();
+        }
+
+        // Countdown timer to enable Next button
+        function startCountdown(seconds) {
+            clearInterval(countdown);
+            nextButton.disabled = true; // Disable Next button initially
+            let timeRemaining = seconds;
+            timeLeft.textContent = timeRemaining;
+
+            countdown = setInterval(() => {
+                timeRemaining -= 1;
+                timeLeft.textContent = timeRemaining;
+                if (timeRemaining <= 0) {
+                    clearInterval(countdown);
+                    nextButton.disabled = false; // Enable Next button when countdown finishes
+                }
+            }, 1000);
+        }
+
+        // Update progress display (e.g., "Ad 1 of 3")
+        function updateProgress() {
+            progress.textContent = `Ad ${currentAdIndex + 1} of ${adLinks.length}`;
+        }
+
+        // Event listener for the Next button
+        nextButton.addEventListener('click', () => {
+            currentAdIndex = (currentAdIndex + 1) % adLinks.length; // Loop to the next ad
+            loadAd(); // Load the next ad
+        });
+
+        // Initial load of the first ad
+        loadAd();
+    </script>
+
+</body>
+</html>
